@@ -114,3 +114,21 @@ class GameOfLife:
 
     def render_emojis(self, live_emoji: str = "🟩", dead_emoji: str = "⬛") -> str:
         return "\n".join("".join(live_emoji if cell == 1 else dead_emoji for cell in row) for row in self.grid)
+
+    def load_pattern(self, pattern_name: str, start_r: int = 10, start_c: int = 10) -> None:
+        self.clear()
+        patterns = {
+            'blinker': [(0, 0), (0, 1), (0, 2)],
+            'toad': [(0, 1), (0, 2), (0, 3), (1, 0), (1, 1), (1, 2)],
+            'beacon': [(0, 0), (0, 1), (1, 0), (2, 3), (3, 2), (3, 3)],
+            'block': [(0, 0), (0, 1), (1, 0), (1, 1)],
+            'beehive': [(0, 1), (0, 2), (1, 0), (1, 3), (2, 1), (2, 2)],
+            'glider': [(0, 1), (1, 2), (2, 0), (2, 1), (2, 2)]
+        }
+        pattern = patterns.get(pattern_name.lower())
+        if pattern:
+            for dr, dc in pattern:
+                r = (start_r + dr) % self.rows
+                c = (start_c + dc) % self.cols
+                self.grid[r][c] = 1
+        self.history.append(self.get_state_tuple())
